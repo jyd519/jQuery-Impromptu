@@ -1,6 +1,6 @@
 /*! jQuery-Impromptu - v6.0.0 - 2014-12-27
 * http://trentrichardson.com/Impromptu
-* Copyright (c) 2014 Trent Richardson; Licensed MIT */
+* Copyright (c) 2015 Trent Richardson; Licensed MIT */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);
@@ -369,6 +369,12 @@
 				t.timeout = setTimeout(function(){ t.close(true); },opts.timeout);
 			}
 
+            //JYD: hide previous instances
+            if (Imp.lifo.length > 1) {
+                for(var i=Imp.lifo.length-2; i>=0; i--){
+                     Imp.lifo[i].jqib.hide();
+                 }
+            }
 			return t;
 		},
 
@@ -391,11 +397,11 @@
 
 			if(t.jqib){
 				t.jqib[t.options.hide]('fast',function(){
-					
+
 					t.jqib.trigger('impromptu:close', [clicked,msg,formvals]);
-					
+
 					t.jqib.remove();
-					
+
 					$(window).off('resize', t._windowResize);
 
 					if(typeof callCallback === 'function'){
@@ -404,6 +410,12 @@
 				});
 			}
 			t.currentStateName = "";
+
+            //JYD: restore the last instance
+            if (Imp.lifo.length > 0) {
+                var jqib = Imp.lifo[Imp.lifo.length-1].jqib;
+                jqib.show();
+            }
 
 			return t;
 		},
@@ -470,7 +482,7 @@
 
 				state += '" name="' + opts.prefix + '_' + statename + '_button' + v.title.replace(/[^a-z0-9]+/gi,'') + '" value="' + v.value + '">' + v.title + '</button>';
 			}
-			
+
 			state += '</div></div>';
 
 			$state = $(state);
@@ -670,7 +682,7 @@
 		*/
 		style: function(){
 			var t = this;
-			
+
 			t.jqif.css({
 				zIndex: t.options.zIndex,
 				display: "none",
@@ -764,7 +776,7 @@
 					if(!subState){
 						t.position();
 					}
-				} // end isDefaultPrevented()	
+				} // end isDefaultPrevented()
 			}// end stateobj !== undefined
 
 			return $state;
