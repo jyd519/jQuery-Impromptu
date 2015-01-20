@@ -401,19 +401,18 @@
 
 					$(window).off('resize', t._windowResize);
 
+                    //JYD: restore the last instance
+                    if (Imp.lifo.length > 0) {
+                        var jqib = Imp.lifo[Imp.lifo.length-1].jqib;
+                        jqib.show();
+                    }
+
 					if(typeof callCallback === 'function'){
 						callCallback();
 					}
 				});
 			}
 			t.currentStateName = "";
-
-            //JYD: restore the last instance
-            if (Imp.lifo.length > 0) {
-                var jqib = Imp.lifo[Imp.lifo.length-1].jqib;
-                jqib.show();
-            }
-
 			return t;
 		},
 
@@ -431,7 +430,7 @@
 				arrow = '',
 				title = '',
 				opts = t.options,
-				$jqistates = $('.'+ opts.prefix +'states'),
+				$jqistates = this.jqib.find('.'+ opts.prefix +'states'),
 				buttons = [],
 				showHtml,defbtn,k,v,l,i=0;
 
